@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiflow — Roles & Permissions V1</title>
+<style>
+:root{--ink:#0B1220;--ink-soft:#121B2E;--paper:#F7F8FB;--paper-alt:#EEF1F7;--card:#fff;--violet:#6C5CE7;--violet-deep:#4C3FC0;--teal:#17B8A6;--coral:#FF6B4A;--text:#10151F;--muted:#5B6472;--line:#E4E7EF;--radius:14px;--radius-lg:20px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--paper);color:var(--text)}
+button,input,select{font:inherit}.app{display:flex;min-height:100vh}.sidebar{width:230px;background:var(--ink);color:#fff;padding:20px 14px;position:fixed;inset:0 auto 0 0;overflow:auto}.brand{font-weight:800;font-size:20px;letter-spacing:.08em;padding:6px 10px 22px}.nav{font-size:13px}.nav a{display:block;padding:10px 11px;border-radius:9px;color:#b8c0cf;text-decoration:none;margin:2px 0}.nav a:hover{background:#1b263b;color:#fff}.nav .section{margin:18px 10px 6px;color:#68758b;font-size:10px;text-transform:uppercase;letter-spacing:.1em}.nav .active{background:#262047;color:#fff}
+.main{margin-left:230px;width:calc(100% - 230px)}.topbar{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 26px;position:sticky;top:0;z-index:5}.search{flex:1;max-width:470px;position:relative}.search input{width:100%;border:1px solid var(--line);background:var(--paper);padding:10px 13px 10px 36px;border-radius:10px;outline:none}.search span{position:absolute;left:12px;top:9px;color:#8b94a4}.top-actions{margin-left:auto;display:flex;gap:9px;align-items:center}.btn{border:1px solid var(--line);background:#fff;padding:9px 13px;border-radius:9px;cursor:pointer}.btn.primary{background:var(--violet);border-color:var(--violet);color:#fff}.avatar{width:34px;height:34px;border-radius:50%;background:#e9e5ff;color:var(--violet-deep);display:grid;place-items:center;font-weight:700}
+.content{padding:26px;max-width:1500px;margin:auto}.crumb{font-size:12px;color:var(--muted);margin-bottom:8px}.title-row{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.title h1{margin:0;font-size:27px}.title p{margin:7px 0 20px;color:var(--muted);font-size:14px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:17px;box-shadow:0 3px 14px #10151f08}.metric-label{font-size:12px;color:var(--muted)}.metric{font-size:25px;font-weight:750;margin-top:7px}.metric-note{font-size:11px;color:var(--muted);margin-top:4px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-top:16px}.panel-head{padding:17px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center}.panel-head h2{font-size:15px;margin:0}.toolbar{display:flex;gap:9px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}.toolbar input,.toolbar select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;outline:none}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:780px}th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);font-size:12px}th{font-size:11px;color:var(--muted);font-weight:650;background:#fbfcfe}tr:hover td{background:#fafbff}.role{font-weight:700}.sub{display:block;color:var(--muted);font-size:11px;margin-top:3px}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:700}.system{background:#eeeafd;color:#5447bb}.custom{background:#e7f8f4;color:#0b897d}.count{font-weight:700}.actions{display:flex;gap:5px}.icon-btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 8px;cursor:pointer}.matrix{overflow:auto}.matrix table{min-width:1050px}.matrix th,.matrix td{text-align:center}.matrix th:first-child,.matrix td:first-child{text-align:left;position:sticky;left:0;background:#fff;z-index:1}.perm{display:inline-flex;align-items:center;gap:4px}.perm select{border:1px solid var(--line);border-radius:7px;padding:5px 6px;font-size:11px}.dot{width:7px;height:7px;border-radius:50%;background:var(--teal);display:inline-block}.muted{color:var(--muted)}
+.drawer-back{position:fixed;inset:0;background:#0b122055;display:none;z-index:20}.drawer{position:absolute;right:0;top:0;height:100%;width:min(500px,100%);background:#fff;box-shadow:-12px 0 40px #0002;display:flex;flex-direction:column}.drawer-head{padding:19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.drawer-body{padding:19px;overflow:auto}.drawer-foot{margin-top:auto;padding:14px 19px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}.role-hero{padding:14px;background:var(--paper);border-radius:12px;margin-bottom:16px}.section-title{font-size:12px;font-weight:750;margin:18px 0 9px}.perm-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:12px}.modal-back{position:fixed;inset:0;background:#0b122066;display:none;align-items:center;justify-content:center;z-index:30}.modal{width:min(620px,94vw);background:#fff;border-radius:18px;box-shadow:0 20px 60px #0003}.modal-head{padding:19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.modal-body{padding:19px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.field label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);padding:10px;border-radius:9px;outline:none}.field.full{grid-column:1/-1}.modal-foot{padding:14px 19px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}.toast{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;padding:12px 15px;border-radius:10px;box-shadow:0 10px 30px #0003;display:none;z-index:50;font-size:12px}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);z-index:10}.main{margin-left:0;width:100%}.cards{grid-template-columns:repeat(2,1fr)}.content{padding:18px}.mobile-menu{display:block!important}}
+@media(max-width:560px){.cards{grid-template-columns:1fr}.topbar{padding:0 14px}.top-actions .btn{display:none}.title-row{display:block}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+.mobile-menu{display:none;border:0;background:none;font-size:20px}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">MULTIFLOW</div>
+  <nav class="nav">
+    <a href="#">Dashboard</a>
+    <div class="section">WhatsApp</div>
+    <a href="#">Overview</a><a href="#">Business Profile</a><a href="#">Phone Number</a><a href="#">Templates</a><a href="#">Campaigns</a><a href="#">Contacts</a><a href="#">Inbox</a><a href="#">Catalog</a><a href="#">Orders</a>
+    <div class="section">Automation</div>
+    <a href="#">Overview</a><a href="#">Workflows</a><a href="#">AI</a><a href="#">Execution Logs</a>
+    <div class="section">Workspace</div>
+    <a href="#">Analytics</a><a href="#" class="active">Team</a><a href="#">Developers</a><a href="#">Billing</a><a href="#">Notifications</a><a href="#">Activity Logs</a><a href="#">Help & Support</a><a href="#">Settings</a>
+  </nav>
+</aside>
+<main class="main">
+<header class="topbar"><button class="mobile-menu" onclick="toast('Mobile navigation opened')">☰</button><div class="search"><span>⌕</span><input id="globalSearch" placeholder="Search contacts, campaigns, templates..."></div><div class="top-actions"><button class="btn" onclick="toast('Notifications opened')">◔</button><button class="btn primary" onclick="openModal()">＋ Create</button><div class="avatar">AK</div></div></header>
+<section class="content">
+<div class="crumb">Team / Roles & Permissions</div>
+<div class="title-row"><div class="title"><h1>Roles & Permissions</h1><p>Control what each role can view, create, edit and manage across Multiflow.</p></div><button class="btn primary" onclick="openModal()">＋ Create Custom Role</button></div>
+
+<div class="cards">
+<div class="card"><div class="metric-label">Total Roles</div><div class="metric">7</div><div class="metric-note">5 system + 2 custom</div></div>
+<div class="card"><div class="metric-label">Members Assigned</div><div class="metric">8</div><div class="metric-note">Across all roles</div></div>
+<div class="card"><div class="metric-label">Custom Roles</div><div class="metric">2</div><div class="metric-note">Sales Lead, Support Lead</div></div>
+<div class="card"><div class="metric-label">Last Updated</div><div class="metric">Today</div><div class="metric-note">by Abhishek Kumar</div></div>
+</div>
+
+<div class="panel">
+<div class="panel-head"><h2>Roles</h2><span class="muted" style="font-size:11px">Default roles cannot be deleted</span></div>
+<div class="toolbar"><input id="roleSearch" placeholder="Search roles..." oninput="renderRoles()"><select id="typeFilter" onchange="renderRoles()"><option value="">All types</option><option>System</option><option>Custom</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Role</th><th>Type</th><th>Members</th><th>Access</th><th>Updated</th><th>Actions</th></tr></thead><tbody id="rolesBody"></tbody></table></div>
+</div>
+
+<div class="panel">
+<div class="panel-head"><h2>Permission Matrix</h2><div><button class="btn" onclick="resetMatrix()">Reset</button> <button class="btn primary" onclick="saveMatrix()">Save Changes</button></div></div>
+<div class="toolbar"><select id="matrixRole" onchange="syncRole()"><option>Owner</option><option>Admin</option><option>Manager</option><option>Agent</option><option>Analyst</option><option>Sales Lead</option><option>Support Lead</option></select><span class="muted" style="padding:9px 0;font-size:11px">Levels: None · View · Manage · Full</span></div>
+<div class="matrix"><table><thead><tr><th>Module</th><th>View</th><th>Create</th><th>Edit</th><th>Delete</th><th>Export</th></tr></thead><tbody id="matrixBody"></tbody></table></div>
+</div>
+</section>
+</main>
+</div>
+
+<div class="drawer-back" id="drawerBack" onclick="if(event.target===this)closeDrawer()"><aside class="drawer"><div class="drawer-head"><div><strong id="drawerTitle">Role</strong><span class="sub" id="drawerSub"></span></div><button class="icon-btn onclick" onclick="closeDrawer()">✕</button></div><div class="drawer-body" id="drawerBody"></div><div class="drawer-foot"><button class="btn" onclick="closeDrawer()">Close</button><button class="btn primary" onclick="toast('Role permissions saved');closeDrawer()">Save Changes</button></div></aside></div>
+
+<div class="modal-back" id="modalBack" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><strong>Create Custom Role</strong><button class="icon-btn" onclick="closeModal()">✕</button></div><div class="modal-body"><div class="form-grid"><div class="field"><label>ROLE NAME</label><input id="newRoleName" placeholder="e.g. Sales Lead"></div><div class="field"><label>BASE ROLE</label><select id="baseRole"><option>Manager</option><option>Agent</option><option>Analyst</option></select></div><div class="field full"><label>DESCRIPTION</label><textarea id="newRoleDesc" rows="3" placeholder="Describe what this role is responsible for..."></textarea></div></div></div><div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="createRole()">Create Role</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const modules=['Dashboard','WhatsApp Overview','Business Profile','Phone Number','Templates','Campaigns','Contacts','Inbox','Catalog','Orders','Automation Overview','Workflows','AI','Execution Logs','Analytics','Team','Developers','Billing','Notifications','Activity Logs','Help & Support','Settings'];
+let roles=[
+{name:'Owner',type:'System',members:1,access:'Full access',updated:'Today',desc:'Complete control over the workspace, billing, team and configuration.'},
+{name:'Admin',type:'System',members:2,access:'Full except ownership',updated:'Today',desc:'Administrative access across business operations and team management.'},
+{name:'Manager',type:'System',members:1,access:'Manage operations',updated:'Yesterday',desc:'Manages conversations, campaigns, contacts and automation operations.'},
+{name:'Agent',type:'System',members:3,access:'Customer operations',updated:'Yesterday',desc:'Handles assigned conversations and customer-facing tasks.'},
+{name:'Analyst',type:'System',members:1,access:'View & export reports',updated:'Sep 8, 2026',desc:'Read-focused access to analytics and operational reporting.'},
+{name:'Sales Lead',type:'Custom',members:0,access:'Sales operations',updated:'Sep 7, 2026',desc:'Custom role for sales leads with campaign and contact management.'},
+{name:'Support Lead',type:'Custom',members:0,access:'Support operations',updated:'Sep 6, 2026',desc:'Custom role for support leads with inbox and team visibility.'}
+];
+const defaults={
+Owner:['Full','Full','Full','Full','Full'],Admin:['View','Full','Full','Full','Full'],Manager:['View','Full','Full','Manage','Full'],Agent:['View','None','None','None','None'],Analyst:['View','None','None','None','Full'], 'Sales Lead':['View','Full','Full','Manage','Full'],'Support Lead':['View','Manage','Manage','None','Full']
+};
+function renderRoles(){let q=document.getElementById('roleSearch').value.toLowerCase(),t=document.getElementById('typeFilter').value;let list=roles.filter(r=>(!q||r.name.toLowerCase().includes(q)||r.desc.toLowerCase().includes(q))&&(!t||r.type===t));document.getElementById('rolesBody').innerHTML=list.map(r=>`<tr><td><span class="role">${r.name}</span><span class="sub">${r.desc}</span></td><td><span class="badge ${r.type==='System'?'system':'custom'}">${r.type}</span></td><td class="count">${r.members}</td><td>${r.access}</td><td>${r.updated}</td><td><div class="actions"><button class="icon-btn" onclick="openDrawer('${r.name}')">View</button><button class="icon-btn" onclick="editRole('${r.name}')">Edit</button>${r.type==='Custom'?'<button class="icon-btn" onclick="deleteRole(\\''+r.name+'\\')">Delete</button>':''}</div></td></tr>`).join('')||'<tr><td colspan="6" class="muted">No roles found.</td></tr>'}
+function openDrawer(name){let r=roles.find(x=>x.name===name);document.getElementById('drawerTitle').textContent=r.name;document.getElementById('drawerSub').textContent=r.type+' role · '+r.members+' members';let perms=defaults[name]||defaults.Manager;document.getElementById('drawerBody').innerHTML=`<div class="role-hero"><strong>${r.access}</strong><div class="sub">${r.desc}</div></div><div class="section-title">Permission summary</div>`+modules.slice(0,10).map((m,i)=>`<div class="perm-row"><span>${m}</span><select><option ${perms[i%5]==='Full'?'selected':''}>Full</option><option ${perms[i%5]==='Manage'?'selected':''}>Manage</option><option ${perms[i%5]==='View'?'selected':''}>View</option><option ${perms[i%5]==='None'?'selected':''}>None</option></select></div>`).join('')+`<div class="section-title">Role safety</div><div class="sub">System roles are protected. Custom roles can be edited or deleted when no members are assigned.</div>`;document.getElementById('drawerBack').style.display='block'}
+function closeDrawer(){document.getElementById('drawerBack').style.display='none'}
+function openModal(){document.getElementById('modalBack').style.display='flex';setTimeout(()=>document.getElementById('newRoleName').focus(),50)}
+function closeModal(){document.getElementById('modalBack').style.display='none'}
+function createRole(){let n=document.getElementById('newRoleName').value.trim(),d=document.getElementById('newRoleDesc').value.trim()||'Custom workspace role.';if(!n){toast('Enter a role name');return}if(roles.some(r=>r.name.toLowerCase()===n.toLowerCase())){toast('Role already exists');return}roles.push({name:n,type:'Custom',members:0,access:'Custom permissions',updated:'Just now',desc:d});closeModal();renderRoles();document.getElementById('matrixRole').insertAdjacentHTML('beforeend',`<option>${n}</option>`);toast('Custom role created')}
+function deleteRole(n){if(!confirm('Delete '+n+'?'))return;roles=roles.filter(r=>r.name!==n);renderRoles();toast('Role deleted')}
+function editRole(n){openDrawer(n);toast('Edit mode opened')}
+function syncRole(){renderMatrix()}
+function renderMatrix(){let role=document.getElementById('matrixRole').value,vals=defaults[role]||defaults.Manager;document.getElementById('matrixBody').innerHTML=modules.map((m,i)=>`<tr><td><strong>${m}</strong><span class="sub">${i<9?'WhatsApp':i<14?'Automation':'Workspace'}</span></td>${['View','Create','Edit','Delete','Export'].map((x,j)=>`<td><select data-role="${role}" data-module="${m}" data-perm="${x}"><option>None</option><option ${vals[(i+j)%5]==='View'?'selected':''}>View</option><option ${vals[(i+j)%5]==='Manage'?'selected':''}>Manage</option><option ${vals[(i+j)%5]==='Full'?'selected':''}>Full</option></select></td>`).join('')}</tr>`).join('')}
+function saveMatrix(){toast('Permission changes saved successfully')}
+function resetMatrix(){renderMatrix();toast('Permission matrix reset')}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2200)}
+renderRoles();renderMatrix();
+</script>
+</body>
+</html>

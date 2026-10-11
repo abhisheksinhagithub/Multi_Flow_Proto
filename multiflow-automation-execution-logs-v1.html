@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multiflow — Automation Execution Logs</title>
+<style>
+:root{
+  --ink:#0B1220;--ink-soft:#121B2E;--paper:#F7F8FB;--paper-alt:#EEF1F7;
+  --card:#fff;--violet:#6C5CE7;--violet-deep:#4C3FC0;--teal:#17B8A6;
+  --coral:#FF6B4A;--text:#10151F;--muted:#5B6472;--line:#E4E7EF;
+  --green:#16A34A;--red:#DC2626;--amber:#D97706;--blue:#2563EB;
+  --radius:14px;--shadow:0 8px 30px rgba(15,23,42,.07)
+}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--text)}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{display:flex;min-height:100vh}.sidebar{width:232px;background:var(--ink);color:#fff;position:fixed;inset:0 auto 0 0;padding:18px 12px;z-index:20}
+.brand{font-size:20px;font-weight:800;letter-spacing:.5px;padding:8px 12px 22px}.brand span{color:#9A8FF3}
+.nav-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#8993A6;padding:12px}.nav a{display:flex;align-items:center;gap:10px;color:#B9C1D0;text-decoration:none;padding:10px 12px;border-radius:10px;font-size:13px;margin:2px 0}.nav a:hover{background:#1B263C;color:#fff}.nav a.active{background:#2A235C;color:#fff}.nav .sub{margin-left:14px}.nav .sub a{font-size:12px}.nav .sub a.active{background:#332A73}.main{margin-left:232px;width:calc(100% - 232px)}.topbar{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;padding:0 24px;position:sticky;top:0;z-index:15}.search{flex:1;max-width:420px;position:relative}.search input{width:100%;border:1px solid var(--line);background:#F8F9FC;border-radius:10px;padding:10px 12px 10px 36px;outline:none}.search:before{content:"⌕";position:absolute;left:13px;top:8px;color:#8B93A1;font-size:17px}.top-actions{margin-left:auto;display:flex;gap:9px;align-items:center}.icon-btn,.profile{border:1px solid var(--line);background:#fff;border-radius:10px;height:38px;padding:0 11px}.profile{display:flex;align-items:center;gap:8px}.avatar{width:28px;height:28px;border-radius:50%;background:#E9E6FF;color:#4C3FC0;display:grid;place-items:center;font-size:11px;font-weight:800}.content{padding:26px}.crumb{font-size:12px;color:var(--muted);margin-bottom:8px}.heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:22px}.heading h1{font-size:25px;margin:0 0 5px}.heading p{margin:0;color:var(--muted);font-size:13px}.btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;font-size:12px}.btn.primary{background:var(--violet);color:#fff}.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--text)}.btn.danger{background:#FEECEC;color:#B91C1C}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}.kpi{padding:17px}.kpi-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.kpi strong{display:block;font-size:24px;margin:8px 0 4px}.trend{font-size:11px;color:var(--green)}.kpi-icon{width:34px;height:34px;border-radius:9px;background:#F0EEFF;display:grid;place-items:center;color:var(--violet);font-weight:800}.tabs{display:flex;gap:3px;border-bottom:1px solid var(--line);margin-bottom:14px}.tab{border:0;background:transparent;padding:10px 14px;color:var(--muted);font-size:12px;border-bottom:2px solid transparent}.tab.active{color:var(--violet);border-color:var(--violet);font-weight:700}.filters{padding:14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.filters input,.filters select{border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:#fff;outline:none;font-size:12px}.filters .grow{flex:1;min-width:210px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:950px}.table th{background:#FAFBFD;color:#727B89;font-size:10px;text-transform:uppercase;letter-spacing:.55px;text-align:left;padding:12px;border-bottom:1px solid var(--line)}.table td{padding:13px 12px;border-bottom:1px solid #EDF0F5;font-size:12px;vertical-align:middle}.table tr:hover td{background:#FCFCFE}.exec{font-weight:800;color:var(--violet)}.subtext{display:block;color:#89919E;font-size:10px;margin-top:3px}.badge{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:700}.badge.success{background:#EAF8EF;color:#15803D}.badge.failed{background:#FDECEC;color:#B91C1C}.badge.running{background:#FFF5E5;color:#B45309}.dot{width:6px;height:6px;border-radius:50%;background:currentColor}.steps{display:flex;align-items:center;gap:4px}.mini-step{width:7px;height:7px;border-radius:50%;background:#CBD2DE}.mini-step.ok{background:var(--green)}.mini-step.fail{background:var(--red)}.mini-step.run{background:var(--amber);box-shadow:0 0 0 3px #FFF1D6}.actions{display:flex;gap:5px}.action{border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 8px;font-size:10px}.action:hover{background:#F5F4FF;color:var(--violet)}.empty{padding:40px;text-align:center;color:var(--muted);display:none}.drawer-backdrop{position:fixed;inset:0;background:rgba(4,9,18,.42);z-index:50;display:none}.drawer{position:absolute;right:0;top:0;height:100%;width:min(620px,94vw);background:#fff;box-shadow:-15px 0 40px rgba(0,0,0,.15);overflow:auto}.drawer-head{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-start}.drawer-head h2{margin:0;font-size:18px}.close{border:0;background:#F2F4F8;border-radius:8px;width:32px;height:32px}.drawer-body{padding:20px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.detail{padding:11px;background:#F8F9FC;border:1px solid var(--line);border-radius:10px}.detail label{font-size:9px;text-transform:uppercase;color:#89919E;letter-spacing:.6px}.detail div{font-size:12px;font-weight:700;margin-top:4px}.timeline{position:relative;margin:10px 0 24px}.timeline:before{content:"";position:absolute;left:12px;top:10px;bottom:10px;width:2px;background:#E6E9F0}.step{position:relative;display:flex;gap:12px;margin:0 0 16px}.step-dot{width:26px;height:26px;border-radius:50%;background:#EAF8EF;color:var(--green);display:grid;place-items:center;font-size:12px;font-weight:800;z-index:1;flex:none}.step.failed .step-dot{background:#FDECEC;color:var(--red)}.step.running .step-dot{background:#FFF5E5;color:var(--amber)}.step-body{flex:1;border:1px solid var(--line);border-radius:10px;padding:11px;background:#fff}.step-title{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:800}.step-meta{font-size:10px;color:var(--muted);margin-top:4px}.error{margin-top:8px;padding:9px;background:#FFF5F5;border:1px solid #F8D2D2;color:#B91C1C;border-radius:8px;font-size:10px}.drawer-footer{display:flex;gap:8px;padding-top:5px}.toast{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;padding:11px 14px;border-radius:10px;font-size:12px;box-shadow:var(--shadow);transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s;z-index:100}.toast.show{transform:translateY(0);opacity:1}.mobile-menu{display:none}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%}.mobile-menu{display:block;border:1px solid var(--line);background:#fff;border-radius:8px;width:38px;height:38px}.topbar{padding:0 14px}.search{max-width:none}.content{padding:18px}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.kpis{grid-template-columns:1fr 1fr;gap:9px}.kpi strong{font-size:19px}.heading{display:block}.heading .btn{margin-top:14px}.top-actions .profile span{display:none}.filters{padding:10px}.filters input,.filters select{width:100%}.detail-grid{grid-template-columns:1fr}.topbar{gap:8px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">MULTI<span>FLOW</span></div>
+  <div class="nav-title">Workspace</div>
+  <nav class="nav">
+    <a href="#">⌂ Dashboard</a>
+    <a href="#">◉ WhatsApp</a>
+    <div class="sub">
+      <a href="#">Overview</a><a href="#">Business Profile</a><a href="#">Phone Number</a>
+      <a href="#">Templates</a><a href="#">Campaigns</a><a href="#">Contacts</a><a href="#">Inbox</a><a href="#">Catalog</a><a href="#">Orders</a>
+    </div>
+    <a href="#">⚙ Automation</a>
+    <div class="sub">
+      <a href="#">Overview</a><a href="#">Workflows</a><a href="#">AI</a><a class="active" href="#">Execution Logs</a>
+    </div>
+    <a href="#">▥ Analytics</a><a href="#">♙ Team</a><a href="#">⌘ Developers</a><a href="#">▣ Billing</a>
+    <a href="#">◌ Notifications</a><a href="#">◫ Activity Logs</a><a href="#">? Help & Support</a><a href="#">⚙ Settings</a>
+  </nav>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+  <div class="search"><input id="globalSearch" placeholder="Search contacts, campaigns, templates, automations..."></div>
+  <div class="top-actions">
+    <button class="icon-btn" onclick="toast('No new notifications')">♧</button>
+    <button class="icon-btn" onclick="toast('Create menu opened')">＋ Create</button>
+    <button class="profile"><span class="avatar">SK</span><span>Sharma Fashion</span>⌄</button>
+  </div>
+</header>
+
+<section class="content">
+  <div class="crumb">Automation / Execution Logs</div>
+  <div class="heading">
+    <div><h1>Execution Logs</h1><p>Monitor every automation run, step result and error.</p></div>
+    <button class="btn secondary" onclick="exportLogs()">⇩ Export Logs</button>
+  </div>
+
+  <div class="kpis">
+    <div class="card kpi"><div class="kpi-top"><span>Total executions</span><span class="kpi-icon">↗</span></div><strong>6,315</strong><span class="trend">+8.4% this month</span></div>
+    <div class="card kpi"><div class="kpi-top"><span>Successful</span><span class="kpi-icon">✓</span></div><strong>6,031</strong><span class="trend">95.5% success rate</span></div>
+    <div class="card kpi"><div class="kpi-top"><span>Failed</span><span class="kpi-icon">!</span></div><strong>284</strong><span class="trend" style="color:var(--red)">4.5% of executions</span></div>
+    <div class="card kpi"><div class="kpi-top"><span>Avg. execution time</span><span class="kpi-icon">◷</span></div><strong>2.4s</strong><span class="trend">0.3s faster</span></div>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab active" data-status="all">All <small>(6,315)</small></button>
+      <button class="tab" data-status="success">Success <small>(6,031)</small></button>
+      <button class="tab" data-status="failed">Failed <small>(284)</small></button>
+      <button class="tab" data-status="running">Running <small>(12)</small></button>
+    </div>
+    <div class="filters">
+      <input class="grow" id="search" placeholder="Search execution ID, workflow or contact..." oninput="render()">
+      <select id="workflow" onchange="render()"><option value="">All workflows</option><option>New Lead Qualification</option><option>Order Confirmation</option><option>24h Lead Follow-up</option><option>Campaign Reply Router</option></select>
+      <select id="date" onchange="dateChanged()"><option>Last 30 days</option><option>Today</option><option>Last 7 days</option><option>Custom range</option></select>
+      <select id="trigger" onchange="render()"><option value="">All triggers</option><option>Incoming message</option><option>Customer reply</option><option>Order event</option><option>Webhook</option><option>Tag added</option></select>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Execution ID</th><th>Automation</th><th>Contact</th><th>Trigger</th><th>Steps</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty" id="empty">No execution logs match your filters.</div>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+<div class="drawer-backdrop" id="backdrop" onclick="if(event.target===this)closeDrawer()">
+  <aside class="drawer">
+    <div class="drawer-head"><div><div class="crumb">Execution detail</div><h2 id="drawerTitle">EX-98421</h2></div><button class="close" onclick="closeDrawer()">×</button></div>
+    <div class="drawer-body" id="drawerBody"></div>
+  </aside>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const logs=[
+{id:'EX-98421',workflow:'New Lead Qualification',contact:'Priya Mehta',trigger:'Incoming message',status:'success',time:'2 min ago',steps:['Trigger received','Condition matched','Template sent','AI responded','Completed'],start:'Today, 10:42:18 AM',error:''},
+{id:'EX-98420',workflow:'Order Confirmation',contact:'Rahul Verma',trigger:'Order event',status:'success',time:'7 min ago',steps:['Order event received','Contact updated','Template sent','Completed'],start:'Today, 10:37:02 AM',error:''},
+{id:'EX-98419',workflow:'24h Lead Follow-up',contact:'Amit Shah',trigger:'Tag added',status:'running',time:'12 min ago',steps:['Tag detected','Condition matched','Waiting 24 hours','Pending'],start:'Today, 10:32:41 AM',error:''},
+{id:'EX-98418',workflow:'Campaign Reply Router',contact:'Neha Singh',trigger:'Customer reply',status:'failed',time:'18 min ago',steps:['Reply received','Condition matched','Template failed'],start:'Today, 10:26:17 AM',error:'Message provider returned a temporary failure.'},
+{id:'EX-98417',workflow:'New Lead Qualification',contact:'Karan Patel',trigger:'Incoming message',status:'success',time:'25 min ago',steps:['Trigger received','Condition matched','AI responded','Assigned agent','Completed'],start:'Today, 10:19:54 AM',error:''},
+{id:'EX-98416',workflow:'Order Confirmation',contact:'Sneha Rao',trigger:'Order event',status:'failed',time:'31 min ago',steps:['Order event received','Contact updated','Webhook failed','Stopped'],start:'Today, 10:13:06 AM',error:'Webhook endpoint did not respond within the configured timeout.'}
+];
+let activeStatus='all';
+
+function statusBadge(s){return `<span class="badge ${s}"><i class="dot"></i>${s[0].toUpperCase()+s.slice(1)}</span>`}
+function stepDots(log){return `<div class="steps">${log.steps.map((x,i)=>`<i class="mini-step ${log.status==='failed'&&i===log.steps.length-1?'fail':log.status==='running'&&i===log.steps.length-1?'run':'ok'}"></i>`).join('')}</div>`}
+function render(){
+ const q=document.getElementById('search').value.toLowerCase(), wf=document.getElementById('workflow').value, tr=document.getElementById('trigger').value;
+ const rows=logs.filter(x=>(activeStatus==='all'||x.status===activeStatus)&&(!q||[x.id,x.workflow,x.contact].join(' ').toLowerCase().includes(q))&&(!wf||x.workflow===wf)&&(!tr||x.trigger===tr));
+ document.getElementById('tbody').innerHTML=rows.map(x=>`<tr>
+ <td><span class="exec">${x.id}</span><span class="subtext">${x.start}</span></td>
+ <td><b>${x.workflow}</b></td><td>${x.contact}</td><td>${x.trigger}</td><td>${stepDots(x)}<span class="subtext">${x.steps.length} steps</span></td>
+ <td>${statusBadge(x.status)}</td><td>${x.time}</td>
+ <td><div class="actions"><button class="action" onclick="openDrawer('${x.id}')">View</button>${x.status==='failed'?`<button class="action" onclick="retry('${x.id}')">Retry</button>`:''}</div></td>
+ </tr>`).join('');
+ document.getElementById('empty').style.display=rows.length?'none':'block';
+}
+function openDrawer(id){
+ const x=logs.find(a=>a.id===id); if(!x)return;
+ document.getElementById('drawerTitle').textContent=x.id;
+ document.getElementById('drawerBody').innerHTML=`
+ <div class="detail-grid">
+  <div class="detail"><label>Workflow</label><div>${x.workflow}</div></div><div class="detail"><label>Contact</label><div>${x.contact}</div></div>
+  <div class="detail"><label>Status</label><div>${statusBadge(x.status)}</div></div><div class="detail"><label>Trigger</label><div>${x.trigger}</div></div>
+  <div class="detail"><label>Start time</label><div>${x.start}</div></div><div class="detail"><label>Execution ID</label><div>${x.id}</div></div>
+ </div>
+ <h3 style="font-size:13px;margin:0 0 12px">Execution steps</h3>
+ <div class="timeline">${x.steps.map((s,i)=>{
+   const fail=x.status==='failed'&&i===x.steps.length-1, run=x.status==='running'&&i===x.steps.length-1;
+   return `<div class="step ${fail?'failed':run?'running':''}"><div class="step-dot">${fail?'!':run?'…':'✓'}</div><div class="step-body"><div class="step-title"><span>${s}</span><span style="font-size:9px;color:var(--muted)">${i+1}</span></div><div class="step-meta">${fail?'Failed':run?'In progress':'Completed'} · ${i===0?'0.2s':(0.3+i*0.4).toFixed(1)+'s'}</div>${fail?`<div class="error">${x.error}</div>`:''}</div></div>`
+ }).join('')}</div>
+ <div class="drawer-footer">${x.status==='failed'?`<button class="btn primary" onclick="retry('${x.id}')">↻ Retry Execution</button>`:''}<button class="btn secondary" onclick="toast('Execution log copied');">Copy ID</button></div>`;
+ document.getElementById('backdrop').style.display='block';
+}
+function closeDrawer(){document.getElementById('backdrop').style.display='none'}
+function retry(id){closeDrawer();toast('Retry queued for '+id)}
+function exportLogs(){toast('Demo export prepared — execution_logs.csv')}
+function dateChanged(){const v=document.getElementById('date').value;if(v==='Custom range'){toast('Custom date range picker opened');}else render()}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),2600)}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(a=>a.classList.remove('active'));t.classList.add('active');activeStatus=t.dataset.status;render()}));
+document.getElementById('globalSearch').addEventListener('input',e=>{document.getElementById('search').value=e.target.value;render()});
+render();
+</script>
+</body>
+</html>

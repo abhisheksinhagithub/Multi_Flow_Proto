@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Multiflow — Billing / Invoices</title>
+<style>
+:root{--ink:#0B1220;--ink-soft:#121B2E;--paper:#F7F8FB;--paper-alt:#EEF1F7;--card:#fff;--violet:#6C5CE7;--violet-deep:#4C3FC0;--teal:#17B8A6;--coral:#FF6B4A;--text-dark:#10151F;--text-muted:#5B6472;--line:#E4E7EF;--radius:14px;--radius-lg:20px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--paper);color:var(--text-dark)}
+button,input,select{font:inherit}button{cursor:pointer}.app{display:flex;min-height:100vh}.sidebar{width:230px;background:var(--ink);color:#fff;padding:18px 12px;position:fixed;left:0;top:0;bottom:0;z-index:20}.brand{font-size:21px;font-weight:800;letter-spacing:.08em;padding:10px 12px 24px}.nav{display:flex;flex-direction:column;gap:4px}.nav a{color:#b9c1d1;text-decoration:none;padding:10px 12px;border-radius:10px;font-size:13px}.nav a:hover,.nav a.active{background:#202a41;color:#fff}.nav .group{margin-top:14px;color:#778197;text-transform:uppercase;font-size:10px;font-weight:700;padding:8px 12px}.main{margin-left:230px;width:calc(100% - 230px)}.topbar{height:64px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:0 24px;position:sticky;top:0;z-index:10}.search{width:280px;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:9px 12px;outline:none}.spacer{flex:1}.iconbtn,.profile{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px}.profile{display:flex;gap:9px;align-items:center}.avatar{width:28px;height:28px;border-radius:50%;background:var(--violet);color:#fff;display:grid;place-items:center;font-size:11px;font-weight:700}.content{padding:26px;max-width:1500px;margin:auto}.crumb{font-size:12px;color:var(--text-muted);margin-bottom:7px}.title-row{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:22px}.title h1{margin:0;font-size:27px}.title p{margin:6px 0 0;color:var(--text-muted);font-size:13px}.primary{border:0;background:var(--violet);color:#fff;border-radius:10px;padding:11px 15px;font-weight:700}.secondary{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 13px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 3px 12px rgba(11,18,32,.035)}.kpi{padding:18px}.kpi-label{font-size:12px;color:var(--text-muted)}.kpi-value{font-size:24px;font-weight:800;margin-top:7px}.kpi-note{font-size:11px;color:var(--text-muted);margin-top:6px}.toolbar{padding:14px;display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.toolbar input,.toolbar select{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 11px;outline:none}.toolbar input{min-width:250px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:980px}.table th,.table td{padding:13px 15px;border-bottom:1px solid var(--line);text-align:left;font-size:12px;white-space:nowrap}.table th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);background:#fafbfc}.table tr:hover td{background:#fbfbfe}.inv{font-weight:750;color:var(--violet-deep)}.muted{color:var(--text-muted)}.status{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:750}.paid{background:#e7f8f4;color:#087c70}.pending{background:#fff4d9;color:#8a6500}.overdue{background:#ffe9e4;color:#a63a22}.draft{background:#edf0f6;color:#5b6472}.failed{background:#ffe7ea;color:#a52336}.actions{display:flex;gap:5px}.actions button{padding:6px 8px;border:1px solid var(--line);background:#fff;border-radius:7px;font-size:11px}.empty{padding:50px;text-align:center;color:var(--text-muted);display:none}.pagination{padding:13px 15px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--text-muted)}.pages button{border:1px solid var(--line);background:#fff;border-radius:7px;padding:6px 9px;margin-left:4px}.modal-bg{position:fixed;inset:0;background:rgba(8,13,25,.48);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}.modal{background:#fff;border-radius:18px;width:min(920px,100%);max-height:92vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}.modal-head{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.modal-head h2{margin:0;font-size:17px}.close{border:0;background:var(--paper-alt);border-radius:8px;padding:7px 10px}.invoice{padding:28px}.invoice-top{display:flex;justify-content:space-between;gap:20px}.invoice-brand{font-weight:850;font-size:21px;letter-spacing:.06em}.invoice-title{text-align:right}.invoice-title h1{margin:0;font-size:28px}.invoice-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:30px 0}.invoice-grid h4{margin:0 0 7px;font-size:11px;text-transform:uppercase;color:var(--text-muted)}.invoice-grid p{margin:3px 0;font-size:12px}.lineitems{width:100%;border-collapse:collapse;margin-top:10px}.lineitems th,.lineitems td{padding:11px 8px;border-bottom:1px solid var(--line);font-size:12px;text-align:left}.lineitems th:last-child,.lineitems td:last-child{text-align:right}.totals{margin-left:auto;width:300px;margin-top:18px}.totalrow{display:flex;justify-content:space-between;padding:6px 0;font-size:12px}.totalrow.grand{font-size:16px;font-weight:800;border-top:1px solid var(--line);margin-top:5px;padding-top:12px}.invoice-actions{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--line);justify-content:flex-end}.toast{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;padding:12px 15px;border-radius:10px;font-size:12px;display:none;z-index:80;box-shadow:0 10px 30px rgba(0,0,0,.2)}.mobile-menu{display:none}
+@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.2s}.sidebar.open{transform:translateX(0)}.main{margin-left:0;width:100%}.mobile-menu{display:block}.topbar{padding:0 14px}.search{width:min(42vw,240px)}.content{padding:18px}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.search{display:none}.title-row{align-items:flex-start;flex-direction:column}.kpis{grid-template-columns:1fr 1fr}.kpi-value{font-size:20px}.toolbar input{min-width:100%;width:100%}.toolbar select{flex:1;min-width:130px}.invoice{padding:20px}.invoice-top{flex-direction:column}.invoice-title{text-align:left}.invoice-grid{grid-template-columns:1fr;margin:22px 0}.totals{width:100%}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar" id="sidebar">
+  <div class="brand">MULTIFLOW</div>
+  <nav class="nav">
+    <a href="#">Dashboard</a>
+    <div class="group">WhatsApp</div>
+    <a href="#">Overview</a><a href="#">Business Profile</a><a href="#">Phone Number</a><a href="#">Templates</a><a href="#">Campaigns</a><a href="#">Contacts</a><a href="#">Inbox</a><a href="#">Catalog</a><a href="#">Orders</a>
+    <div class="group">Automation</div>
+    <a href="#">Overview</a><a href="#">Workflows</a><a href="#">AI</a><a href="#">Execution Logs</a>
+    <a href="#">Analytics</a><a href="#">Team</a><a href="#">Developers</a>
+    <div class="group">Billing</div>
+    <a href="#">Credits</a><a href="#">Recharge</a><a href="#">Transactions</a><a class="active" href="#">Invoices</a>
+    <a href="#">Notifications</a><a href="#">Activity Logs</a><a href="#">Help & Support</a><a href="#">Settings</a>
+  </nav>
+</aside>
+<main class="main">
+<header class="topbar">
+  <button class="iconbtn mobile-menu" onclick="toggleSide()">☰</button>
+  <input class="search" placeholder="Search contacts, campaigns, templates…" oninput="globalSearch(this.value)">
+  <div class="spacer"></div>
+  <button class="iconbtn" onclick="toast('No new notifications')">🔔</button>
+  <button class="primary" onclick="toast('Create menu opened')">＋ Create</button>
+  <button class="profile"><span class="avatar">AK</span><span>Abhishek</span>⌄</button>
+</header>
+<section class="content">
+  <div class="crumb">Billing / Invoices</div>
+  <div class="title-row">
+    <div class="title"><h1>Invoices</h1><p>View, manage and download your Multiflow billing invoices.</p></div>
+    <button class="primary" onclick="toast('Invoice creation is available in the production billing service.')">＋ Create Invoice</button>
+  </div>
+
+  <div class="kpis">
+    <div class="card kpi"><div class="kpi-label">Total Invoices</div><div class="kpi-value">24</div><div class="kpi-note">All generated invoices</div></div>
+    <div class="card kpi"><div class="kpi-label">Paid</div><div class="kpi-value">19</div><div class="kpi-note">79.2% of invoices</div></div>
+    <div class="card kpi"><div class="kpi-label">Pending</div><div class="kpi-value">4</div><div class="kpi-note">Awaiting payment</div></div>
+    <div class="card kpi"><div class="kpi-label">Total Billed</div><div class="kpi-value">₹1,84,500</div><div class="kpi-note">Including GST</div></div>
+  </div>
+
+  <div class="card">
+    <div class="toolbar">
+      <input id="search" placeholder="Search invoice number, business…" oninput="render()">
+      <select id="status" onchange="render()"><option value="">All Status</option><option>Paid</option><option>Pending</option><option>Overdue</option><option>Draft</option><option>Failed</option></select>
+      <select id="period" onchange="render()"><option value="">All Dates</option><option>September 2026</option><option>August 2026</option><option>July 2026</option></select>
+      <select id="sort" onchange="render()"><option value="date">Newest first</option><option value="amount">Amount high → low</option><option value="invoice">Invoice A → Z</option></select>
+      <button class="secondary" onclick="resetFilters()">Reset</button>
+      <div class="spacer"></div>
+      <button class="secondary" onclick="exportCSV()">Export CSV</button>
+    </div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th>Invoice</th><th>Date</th><th>Business</th><th>Billing Period</th><th>Subtotal</th><th>GST</th><th>Total</th><th>Status</th><th>Due Date</th><th>Actions</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="empty" id="empty">No invoices match your filters.</div>
+    </div>
+    <div class="pagination"><span id="count"></span><span class="pages"><button>‹</button><button>1</button><button>2</button><button>3</button><button>›</button></span></div>
+  </div>
+</section>
+</main>
+</div>
+
+<div class="modal-bg" id="modal" onclick="if(event.target===this)closeModal()">
+ <div class="modal">
+  <div class="modal-head"><h2 id="modalTitle">Invoice</h2><button class="close" onclick="closeModal()">✕</button></div>
+  <div class="invoice" id="invoiceBody"></div>
+  <div class="invoice-actions">
+    <button class="secondary" onclick="printInvoice()">🖨 Print</button>
+    <button class="secondary" onclick="toast('Invoice download prepared')">↓ Download PDF</button>
+    <button class="secondary" onclick="toast('Invoice sent to billing email')">✉ Send Invoice</button>
+  </div>
+ </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const invoices=[
+ {id:'INV-2026-0024',date:'14 Sep 2026',month:'September 2026',business:'Sharma Fashion',period:'01–14 Sep 2026',sub:7627.12,gst:1372.88,total:9000,status:'Paid',due:'14 Sep 2026',desc:'Growth Package Recharge'},
+ {id:'INV-2026-0023',date:'02 Sep 2026',month:'September 2026',business:'Sharma Fashion',period:'01–02 Sep 2026',sub:14406.78,gst:2593.22,total:17000,status:'Paid',due:'02 Sep 2026',desc:'Scale Package Recharge'},
+ {id:'INV-2026-0022',date:'27 Aug 2026',month:'August 2026',business:'Sharma Fashion',period:'01–27 Aug 2026',sub:7627.12,gst:1372.88,total:9000,status:'Paid',due:'27 Aug 2026',desc:'Growth Package Recharge'},
+ {id:'INV-2026-0021',date:'18 Aug 2026',month:'August 2026',business:'Sharma Fashion',period:'01–18 Aug 2026',sub:2118.64,gst:381.36,total:2500,status:'Paid',due:'18 Aug 2026',desc:'Starter Package Recharge'},
+ {id:'INV-2026-0020',date:'03 Aug 2026',month:'August 2026',business:'Sharma Fashion',period:'01–03 Aug 2026',sub:2118.64,gst:381.36,total:2500,status:'Pending',due:'10 Aug 2026',desc:'Starter Package Recharge'},
+ {id:'INV-2026-0019',date:'29 Jul 2026',month:'July 2026',business:'Sharma Fashion',period:'01–29 Jul 2026',sub:7627.12,gst:1372.88,total:9000,status:'Failed',due:'29 Jul 2026',desc:'Growth Package Recharge'},
+ {id:'INV-2026-0018',date:'15 Jul 2026',month:'July 2026',business:'Sharma Fashion',period:'01–15 Jul 2026',sub:4237.29,gst:762.71,total:5000,status:'Paid',due:'15 Jul 2026',desc:'Custom Credit Recharge'},
+ {id:'INV-2026-0017',date:'02 Jul 2026',month:'July 2026',business:'Sharma Fashion',period:'01–02 Jul 2026',sub:14406.78,gst:2593.22,total:17000,status:'Overdue',due:'09 Jul 2026',desc:'Scale Package Recharge'},
+ {id:'INV-2026-0016',date:'28 Jun 2026',month:'June 2026',business:'Sharma Fashion',period:'28 Jun 2026',sub:2542.37,gst:457.63,total:3000,status:'Paid',due:'28 Jun 2026',desc:'Utility Credits Recharge'},
+ {id:'INV-2026-0015',date:'20 Jun 2026',month:'June 2026',business:'Sharma Fashion',period:'20 Jun 2026',sub:5084.75,gst:915.25,total:6000,status:'Paid',due:'20 Jun 2026',desc:'Utility Credits Recharge'}
+];
+
+function money(n){return '₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function badge(s){return `<span class="status ${s.toLowerCase()}">${s}</span>`}
+function render(){
+ let q=document.getElementById('search').value.toLowerCase(), st=document.getElementById('status').value, per=document.getElementById('period').value, sort=document.getElementById('sort').value;
+ let rows=invoices.filter(x=>(!q||(x.id+x.business+x.desc).toLowerCase().includes(q))&&(!st||x.status===st)&&(!per||x.month===per));
+ if(sort==='amount') rows.sort((a,b)=>b.total-a.total);
+ if(sort==='invoice') rows.sort((a,b)=>a.id.localeCompare(b.id));
+ const tb=document.getElementById('tbody'); tb.innerHTML=rows.map(x=>`<tr>
+ <td><span class="inv">${x.id}</span></td><td>${x.date}</td><td>${x.business}</td><td>${x.period}</td><td>${money(x.sub)}</td><td>${money(x.gst)}</td><td><b>${money(x.total)}</b></td><td>${badge(x.status)}</td><td>${x.due}</td>
+ <td><div class="actions"><button onclick="viewInvoice('${x.id}')">View</button><button onclick="toast('Download started for ${x.id}')">PDF</button><button onclick="toast('${x.id} sent to billing email')">Send</button></div></td></tr>`).join('');
+ document.getElementById('empty').style.display=rows.length?'none':'block';
+ document.getElementById('count').textContent=`Showing ${rows.length} of ${invoices.length} invoices`;
+}
+function viewInvoice(id){
+ const x=invoices.find(v=>v.id===id); if(!x)return;
+ document.getElementById('modalTitle').textContent=x.id;
+ document.getElementById('invoiceBody').innerHTML=`
+ <div class="invoice-top"><div><div class="invoice-brand">MULTIFLOW</div><p class="muted">WhatsApp Business API & Automation</p></div>
+ <div class="invoice-title"><h1>INVOICE</h1><div class="muted">${x.id}</div></div></div>
+ <div class="invoice-grid"><div><h4>Bill To</h4><p><b>${x.business}</b></p><p>Customer ID: MF-CUS-1028</p><p>GSTIN: 27ABCDE1234F1Z5</p><p>Mumbai, Maharashtra, India</p></div>
+ <div><h4>Invoice Details</h4><p>Invoice Date: <b>${x.date}</b></p><p>Due Date: <b>${x.due}</b></p><p>Billing Period: ${x.period}</p><p>Status: ${badge(x.status)}</p></div></div>
+ <table class="lineitems"><thead><tr><th>Description</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead><tbody><tr><td>${x.desc}</td><td>1</td><td>${money(x.sub)}</td><td>${money(x.sub)}</td></tr></tbody></table>
+ <div class="totals"><div class="totalrow"><span>Subtotal</span><b>${money(x.sub)}</b></div><div class="totalrow"><span>CGST 9%</span><b>${money(x.gst/2)}</b></div><div class="totalrow"><span>SGST 9%</span><b>${money(x.gst/2)}</b></div><div class="totalrow grand"><span>Total</span><b>${money(x.total)}</b></div></div>`;
+ document.getElementById('modal').style.display='flex';
+}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(window.tt);window.tt=setTimeout(()=>t.style.display='none',2300)}
+function resetFilters(){document.getElementById('search').value='';document.getElementById('status').value='';document.getElementById('period').value='';document.getElementById('sort').value='date';render();toast('Filters reset')}
+function exportCSV(){let head='Invoice,Date,Business,Billing Period,Subtotal,GST,Total,Status,Due Date\\n';let body=invoices.map(x=>[x.id,x.date,x.business,x.period,x.sub,x.gst,x.total,x.status,x.due].join(',')).join('\\n');let a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(head+body);a.download='multiflow-invoices.csv';a.click();toast('Invoice CSV exported')}
+function printInvoice(){window.print()}
+function globalSearch(v){if(v.trim())toast('Global search: '+v)}
+function toggleSide(){document.getElementById('sidebar').classList.toggle('open')}
+render();
+</script>
+</body>
+</html>
